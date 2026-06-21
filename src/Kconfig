@@ -71,7 +71,6 @@ config USB_DEVICE_ID
     default 0x614e
 config USB_SERIAL_NUMBER_CHIPID
     depends on USB && HAVE_CHIPID
-    default n if MACH_STM32H5
     default y
 config USB_SERIAL_NUMBER
     default "12345"
