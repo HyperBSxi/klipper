@@ -456,10 +456,12 @@ usb_init(void)
     // Enable USB clock
     enable_pclock(USB_BASE);
 
-    // Enable the USB analog transceiver and wait for it to settle
-    USB->CNTR = USB_CNTR_INIT | USB_CNTR_FRES;
-    udelay(1000);
-    USB->ISTR = 0;
+    if (CONFIG_MACH_STM32H5) {
+        // Enable the USB analog transceiver and wait for it to settle.
+        USB->CNTR = USB_CNTR_INIT | USB_CNTR_FRES;
+        udelay(1000);
+        USB->ISTR = 0;
+    }
 
     // Setup USB packet memory
     btable_configure();
@@ -474,8 +476,12 @@ usb_init(void)
 #endif
 
     // Reset usb controller and enable interrupts
+    if (!CONFIG_MACH_STM32H5)
+        USB->CNTR = USB_CNTR_FRES;
     USB->DADDR = 0;
     USB->CNTR = USB_CNTR_INIT | USB_CNTR_RESETM;
+    if (!CONFIG_MACH_STM32H5)
+        USB->ISTR = 0;
     armcm_enable_irq(USB_IRQHandler, USBx_IRQn, 1);
 }
 DECL_INIT(usb_init);
