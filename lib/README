@@ -105,6 +105,12 @@ The stm32h7 directory contains code from:
 version v1.9.0 (ccb11556044540590ca6e45056e6b65cdca2deb2). Contents
 taken from the Drivers/CMSIS/Device/ST/STM32H7xx/ directory.
 
+The stm32h5 directory contains code from:
+  https://github.com/STMicroelectronics/cmsis_device_h5
+revision bfe058f67586047e9b1352fb902aa41b2af041f3 (CMSIS device version
+1.6.0). The stm32h562xx.h, stm32h5xx.h, system_stm32h5xx.h, and
+system_stm32h5xx.c files were retained for STM32H562 support.
+
 The pico-sdk directory contains code from the pico sdk:
   https://github.com/raspberrypi/pico-sdk.git
 version 2.2.0 (a1438dff1d38bd9c65dbd693f0e5db4b9ae91779). It has been
