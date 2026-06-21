@@ -65,7 +65,7 @@
      || CONFIG_STM32_CANBUS_PB5_PB6 ||CONFIG_STM32_CANBUS_PB12_PB13)
  #define SOC_CAN FDCAN1
  #define MSG_RAM (((struct fdcan_ram_layout*)SRAMCAN_BASE)->fdcan1)
- #if CONFIG_MACH_STM32H7 || CONFIG_MACH_STM32G4
+ #if CONFIG_MACH_STM32H7 || CONFIG_MACH_STM32G4 || CONFIG_MACH_STM32H5
   #define CAN_IT0_IRQn  FDCAN1_IT0_IRQn
  #endif
 #else
@@ -79,6 +79,10 @@
 #if CONFIG_MACH_STM32G0
  #define CAN_IT0_IRQn  TIM16_FDCAN_IT0_IRQn
  #define CAN_FUNCTION  GPIO_FUNCTION(3) // Alternative function mapping number
+#endif
+
+#if CONFIG_MACH_STM32H5
+ #define CAN_FUNCTION  GPIO_FUNCTION(9)
 #endif
 
 #if CONFIG_MACH_STM32H7 || CONFIG_MACH_STM32G4
@@ -174,7 +178,7 @@ canhw_set_filter(uint32_t id)
     can_filter(1, id);
     can_filter(2, id + 1);
 
-#if CONFIG_MACH_STM32G0 || CONFIG_MACH_STM32G4
+#if CONFIG_MACH_STM32G0 || CONFIG_MACH_STM32G4 || CONFIG_MACH_STM32H5
     SOC_CAN->RXGFC = ((id ? 3 : 1) << FDCAN_RXGFC_LSS_Pos
                       | 0x02 << FDCAN_RXGFC_ANFS_Pos);
 #elif CONFIG_MACH_STM32H7

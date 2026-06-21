@@ -24,7 +24,50 @@ DECL_CONSTANT("ADC_MAX", 4095);
 // GPIOs like A0_C are not covered!
 // This always gives the pin connected to the positive channel
 static const uint8_t adc_pins[] = {
-#if CONFIG_MACH_STM32H7
+#if CONFIG_MACH_STM32H5
+    // ADC1
+    GPIO('A', 0),  // ADC12_INP0
+    GPIO('A', 1),  // ADC12_INP1
+    GPIO('F', 11), // ADC1_INP2
+    GPIO('A', 6),  // ADC12_INP3
+    GPIO('C', 4),  // ADC12_INP4
+    GPIO('B', 1),  // ADC12_INP5
+    GPIO('F', 12), // ADC1_INP6
+    GPIO('A', 7),  // ADC12_INP7
+    GPIO('C', 5),  // ADC12_INP8
+    GPIO('B', 0),  // ADC12_INP9
+    GPIO('C', 0),  // ADC12_INP10
+    GPIO('C', 1),  // ADC12_INP11
+    GPIO('C', 2),  // ADC12_INP12
+    GPIO('C', 3),  // ADC12_INP13
+    GPIO('A', 2),  // ADC12_INP14
+    GPIO('A', 3),  // ADC12_INP15
+    ADC_TEMPERATURE_PIN,
+    ADC_INVALID_PIN, // VREFINT
+    GPIO('A', 4),  // ADC12_INP18
+    GPIO('A', 5),  // ADC12_INP19
+    // ADC2
+    GPIO('A', 0),  // ADC12_INP0
+    GPIO('A', 1),  // ADC12_INP1
+    GPIO('F', 13), // ADC2_INP2
+    GPIO('A', 6),  // ADC12_INP3
+    GPIO('C', 4),  // ADC12_INP4
+    GPIO('B', 1),  // ADC12_INP5
+    GPIO('F', 14), // ADC2_INP6
+    GPIO('A', 7),  // ADC12_INP7
+    GPIO('C', 5),  // ADC12_INP8
+    GPIO('B', 0),  // ADC12_INP9
+    GPIO('C', 0),  // ADC12_INP10
+    GPIO('C', 1),  // ADC12_INP11
+    GPIO('C', 2),  // ADC12_INP12
+    GPIO('C', 3),  // ADC12_INP13
+    GPIO('A', 2),  // ADC12_INP14
+    GPIO('A', 3),  // ADC12_INP15
+    ADC_INVALID_PIN, // VBAT
+    ADC_INVALID_PIN, // VDDCORE
+    GPIO('A', 4),  // ADC12_INP18
+    GPIO('A', 5),  // ADC12_INP19
+#elif CONFIG_MACH_STM32H7
     // ADC1
     ADC_INVALID_PIN, // PA0_C  ADC12_INP0
     ADC_INVALID_PIN, // PA1_C  ADC12_INP1

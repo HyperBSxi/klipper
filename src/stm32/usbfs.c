@@ -23,7 +23,7 @@
   // Transfer memory is accessed with 16bits and contains 16bits of data
   typedef volatile uint16_t epmword_t;
   #define WSIZE 2
-#elif CONFIG_MACH_STM32G0
+#elif CONFIG_MACH_STM32G0 || CONFIG_MACH_STM32H5
   // Transfer memory is accessed with 32bits and contains 32bits of data
   typedef volatile uint32_t epmword_t;
   #define WSIZE 4
@@ -32,6 +32,8 @@
 // Different chips have different names for the USB irq
 #if CONFIG_MACH_STM32F1 || CONFIG_MACH_STM32G4
   #define USBx_IRQn USB_LP_IRQn
+#elif CONFIG_MACH_STM32H5
+  #define USBx_IRQn USB_DRD_FS_IRQn
 #elif CONFIG_MACH_STM32G0B1
   #define USBx_IRQn USB_UCPD1_2_IRQn
 #else
@@ -39,8 +41,11 @@
 #endif
 
 // The stm32g0 has slightly different register names
-#if CONFIG_MACH_STM32G0
+#if CONFIG_MACH_STM32G0 || CONFIG_MACH_STM32H5
   #define USB USB_DRD_FS
+  #if CONFIG_MACH_STM32H5
+    #define USB_BASE USB_DRD_BASE
+  #endif
   #define USB_PMAADDR USB_DRD_PMAADDR
   #define USB_EPADDR_FIELD USB_CHEP_ADDR
   #define USB_EP_CTR_RX USB_EP_VTRX

@@ -11,29 +11,29 @@
 #include "internal.h" // enable_pclock
 #include "sched.h" // DECL_INIT
 
+#define USART_USE_AF7 (CONFIG_MACH_STM32H7 | CONFIG_MACH_STM32G4 \
+                       | CONFIG_MACH_STM32H5)
+
 // Select the configured serial port
 #if CONFIG_STM32_SERIAL_USART1
   DECL_CONSTANT_STR("RESERVE_PINS_serial", "PA10,PA9");
   #define GPIO_Rx GPIO('A', 10)
   #define GPIO_Tx GPIO('A', 9)
-  #define USARTx_FUNCTION GPIO_FUNCTION( \
-            (CONFIG_MACH_STM32H7 | CONFIG_MACH_STM32G4) ? 7 : 1)
+  #define USARTx_FUNCTION GPIO_FUNCTION(USART_USE_AF7 ? 7 : 1)
   #define USARTx USART1
   #define USARTx_IRQn USART1_IRQn
 #elif CONFIG_STM32_SERIAL_USART1_ALT_PB7_PB6
   DECL_CONSTANT_STR("RESERVE_PINS_serial", "PB7,PB6");
   #define GPIO_Rx GPIO('B', 7)
   #define GPIO_Tx GPIO('B', 6)
-  #define USARTx_FUNCTION GPIO_FUNCTION( \
-            (CONFIG_MACH_STM32H7 | CONFIG_MACH_STM32G4) ? 7 : 0)
+  #define USARTx_FUNCTION GPIO_FUNCTION(USART_USE_AF7 ? 7 : 0)
   #define USARTx USART1
   #define USARTx_IRQn USART1_IRQn
 #elif CONFIG_STM32_SERIAL_USART2
   DECL_CONSTANT_STR("RESERVE_PINS_serial", "PA3,PA2");
   #define GPIO_Rx GPIO('A', 3)
   #define GPIO_Tx GPIO('A', 2)
-  #define USARTx_FUNCTION GPIO_FUNCTION( \
-            (CONFIG_MACH_STM32H7 | CONFIG_MACH_STM32G4) ? 7 : 1)
+  #define USARTx_FUNCTION GPIO_FUNCTION(USART_USE_AF7 ? 7 : 1)
   #define USARTx USART2
   #define USARTx_IRQn USART2_IRQn
 #elif CONFIG_STM32_SERIAL_USART2_ALT_PA15_PA14
@@ -130,6 +130,9 @@
   // The stm32h7 has slightly different register names
   #define USART_ISR_RXNE USART_ISR_RXNE_RXFNE
   #define USART_ISR_TXE USART_ISR_TXE_TXFNF
+#elif CONFIG_MACH_STM32H5
+  #define USART_BRR_DIV_MANTISSA_Pos 4
+  #define USART_BRR_DIV_FRACTION_Pos 0
 #endif
 
 #define CR1_FLAGS (USART_CR1_UE | USART_CR1_RE | USART_CR1_TE   \
