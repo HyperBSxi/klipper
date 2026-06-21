@@ -71,6 +71,7 @@ config USB_DEVICE_ID
     default 0x614e
 config USB_SERIAL_NUMBER_CHIPID
     depends on USB && HAVE_CHIPID
+    default n if MACH_STM32H5
     default y
 config USB_SERIAL_NUMBER
     default "12345"
@@ -317,7 +318,6 @@ config WANT_STEPPER_OPTIMIZED_BOTH_EDGE
 config INITIAL_PINS
     string "GPIO pins to set at micro-controller startup"
     depends on LOW_LEVEL_OPTIONS
-    default "!PA12" if MACH_STM32H562 && USB
     help
         One may specify a comma separated list of gpio pins to set
         during the micro-controller startup sequence. By default the
