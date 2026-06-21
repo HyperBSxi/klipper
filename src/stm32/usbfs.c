@@ -56,6 +56,10 @@
   #define USB_CNTR_FRES USB_CNTR_USBRST
 #endif
 
+#ifndef USB_CNTR_INIT
+  #define USB_CNTR_INIT 0
+#endif
+
 // Some chip variants do not define these fields
 #ifndef USB_EP_DTOG_TX_Pos
   #define USB_EP_DTOG_TX_Pos 6
@@ -389,7 +393,7 @@ usb_reset(void)
     }
     USB_EPR[ep] = bi_epr_flags;
 
-    USB->CNTR = USB_CNTR_CTRM | USB_CNTR_RESETM;
+    USB->CNTR = USB_CNTR_INIT | USB_CNTR_CTRM | USB_CNTR_RESETM;
     USB->DADDR = USB_DADDR_EF;
 }
 
@@ -443,23 +447,35 @@ usb_init(void)
         udelay(5000);
         gpio_in_setup(GPIO('A', 12), 0);
     }
+    if (CONFIG_MACH_STM32H5) {
+        // Configure PA11/PA12 for USB_DRD_FS (AF10).
+        gpio_peripheral(GPIO('A', 11), GPIO_FUNCTION(10), 0);
+        gpio_peripheral(GPIO('A', 12), GPIO_FUNCTION(10), 0);
+    }
 
     // Enable USB clock
     enable_pclock(USB_BASE);
+
+    // Enable the USB analog transceiver and wait for it to settle
+    USB->CNTR = USB_CNTR_INIT | USB_CNTR_FRES;
+    udelay(1000);
+    USB->ISTR = 0;
 
     // Setup USB packet memory
     btable_configure();
 
     // Enable USB pullup
 #ifdef USB_BCDR_DPPU
+    if (CONFIG_MACH_STM32H5) {
+        USB->BCDR = 0;
+        udelay(10000);
+    }
     USB->BCDR = USB_BCDR_DPPU;
 #endif
 
     // Reset usb controller and enable interrupts
-    USB->CNTR = USB_CNTR_FRES;
     USB->DADDR = 0;
-    USB->CNTR = USB_CNTR_RESETM;
-    USB->ISTR = 0;
+    USB->CNTR = USB_CNTR_INIT | USB_CNTR_RESETM;
     armcm_enable_irq(USB_IRQHandler, USBx_IRQn, 1);
 }
 DECL_INIT(usb_init);

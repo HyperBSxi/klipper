@@ -85,7 +85,9 @@ reset_handler_stage_two(void)
 
     __DSB();
     __ISB();
+#if __CORTEX_M != 33
     __enable_irq();
+#endif
 
     // Copy global variables from flash to ram
     uint32_t count = (&_data_end - &_data_start) * 4;

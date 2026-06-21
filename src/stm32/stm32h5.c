@@ -20,6 +20,9 @@
 struct cline
 lookup_clock_line(uint32_t periph_base)
 {
+    if (periph_base == USB_DRD_BASE)
+        return (struct cline){.en=&RCC->APB2ENR, .rst=&RCC->APB2RSTR,
+                              .bit=RCC_APB2ENR_USBEN};
     if (periph_base == FDCAN1_BASE)
         return (struct cline){.en=&RCC->APB1HENR, .rst=&RCC->APB1HRSTR,
                               .bit=RCC_APB1HENR_FDCANEN};
@@ -139,6 +142,9 @@ clock_setup(void)
         RCC->CR |= RCC_CR_HSI48ON;
         while (!(RCC->CR & RCC_CR_HSI48RDY))
             ;
+        PWR->USBSCR |= PWR_USBSCR_USB33DEN;
+        while (!(PWR->VMSR & PWR_VMSR_USB33RDY))
+            ;
         PWR->USBSCR |= PWR_USBSCR_USB33SV;
         enable_pclock(CRS_BASE);
         CRS->CR = (CRS->CR & CRS_CR_TRIM) | CRS_CR_CEN | CRS_CR_AUTOTRIMEN;
@@ -160,5 +166,6 @@ armcm_main(void)
     SCB->VTOR = (uint32_t)VectorTable;
     dfu_reboot_check();
     clock_setup();
+    __enable_irq();
     sched_main();
 }
